@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://accelerate-editor.web.app/libs/aframe-v1.3.0.min.js"></script>
+    <script src="https://accelerate-editor.web.app/libs/a-game/a-game-0.47.0.js"></script>
+    <script src="https://accelerate-editor.web.app/libs/aframe-inspector/aframe-inspector.min.js"></script>
+  </head>
+  <body>
+    <a-scene physics>
+      <a-player locomotion grabbing></a-player>
+      <a-sky color="#ECECEC"></a-sky>
+      <a-box id="floor_0001" scale="2.8 1 3.03" material="color: #f3f8ff"
+             position="0.09269 -0.33328 0.15166"
+             rotation="0 0 0"
+             color="lightgreen"
+             width="10"
+             height="1"
+             depth="10"
+             body="type:static;"
+             shadow="receive: true"
+             grabbable="physics:true;"
+             floor></a-box>
+
+	<a-asset-item id="rabbit" src="https://accelerate-editor.web.app/libs/a-game/rabbit.glb"></a-asset-item>
+<a-asset-item id="rabbit 2" src="https://accelerate-editor.web.app/libs/a-game/rabbit.glb"></a-asset-item>
+<a-asset-item id="mountain" src="low_poly_mountain.glb"></a-asset-item>
+<a-asset-item id="snow tree" scale="0.58 0.64 0.44" position="-2.88513 0.36346 5.77549" src="low_poly_snow_tree.glb"></a-asset-item>
+<a-asset-item id="cloud" src="low_poly_cloud.glb"></a-asset-item>
+<a-asset-item id="snowy tree" src="low_poly_snowy_trees_-_free_asset_pack.glb"></a-asset-item>
+<a-asset-item id="rocks" src="low_poly_rocks.glb"></a-asset-item>
+<a-asset-item id="tree trunk" src="low_poly_tree_trunk"></a-asset-item>
+<a-asset-item id="fox" src="https://accelerate-editor.web.app/libs/a-game/fox.glb"></a-asset-item>
+
+<a-entity id="rabbit_7249"
+          gltf-model="#rabbit"
+          position="-9.32115 0.21324 0.25052"
+          rotation="-0.9723093783370069 101.79454667191771 -4.151652183517945"
+          scale="0.08 0.08 0.08"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+
+<a-entity id="rabbit_9182"
+          gltf-model="#rabbit 2"
+          position="-7.65407 -0.0314 -0.53616"
+          rotation="0 70.19134060809176 0"
+          scale="0.08 0.08 0.08"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+
+<a-entity id="glb_6713"
+          gltf-model="#mountain"
+          position="2.7317 0.00595 -4.03259"
+          rotation="0 127.72145985938258 0"
+          scale="0.08 0.04 0.07"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+
+<a-entity id="snow tree 1"
+          gltf-model="#snow tree"
+          position="9.35524 0.59254 4.39024"
+          rotation="0 0 0"
+          scale="1 1 1"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+      
+   <a-entity id="snow tree 2"
+          gltf-model="#snow tree"
+          position="-8.40183 0.41624 -11.17617"
+          rotation="0 0 0"
+          scale="1 1 1"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+      
+      <a-entity id="snow tree 3"
+          gltf-model="#snow tree"
+          position="-6.82621 0.41624 -8.62092"
+          rotation="0 0 0"
+          scale="1 1 1"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+      
+       <a-entity id="snow tree 4"
+          gltf-model="#snow tree"
+          position="-10.85697 0.05141 -9.59964"
+          rotation="0 0 0"
+          scale="1 1 1"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+      
+      <a-entity id="snow tree 5"
+          gltf-model="#snow tree"
+          position="6.33056 0.41624 5.21795"
+          rotation="0 0 0"
+          scale="1 1 1"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+       
+      <a-entity id="snow tree 6"
+          gltf-model="#snow tree"
+          position="7.57031 -0.093 6.47694"
+          rotation="0 0 0"
+          scale="1 1 1"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+      
+      <a-entity id="snow tree 7"
+          gltf-model="#snow tree"
+          position="-10.3349 0.41624 -7.44913"
+          rotation="0 0 0"
+          scale="1 1 1"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+      
+      
+
+<a-entity id="ambient-light_4261" light="type: ambient; color: lavender"></a-entity>
+<a-entity id="directional-light" light="type: directional; color: white; intensity: 0.6; castShadow: true" position="-0.5 -0.10046 1"></a-entity>
+
+<a-entity id="directional-light" light="type: directional; color: #FFFFFF; intensity: 0.6; castShadow: true" position="-0.5 1 1"></a-entity>
+
+<a-entity id="glb_9117"
+          gltf-model="#cloud"
+          position="0.2827 7.93914 6.642"
+          rotation="0 0 0"
+          scale="-0.11 0.12 0.18"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+      
+      <a-entity id="cloud 2"
+          gltf-model="#cloud"
+          position="-2.80415 6.84235 -2.66351"
+          rotation="0 -75.77825206841243 0"
+          scale="0.13 0.16 0.19"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+
+
+<a-entity id="rock 1"
+          gltf-model="#rocks"
+          position="-8.28161 0.59861 -7.97078"
+          rotation="0 0 0"
+          scale="1 1 1"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+
+
+<a-entity id="fox_9760"
+          gltf-model="#fox"
+          position="10.77662 0.58017 6.77662"
+          rotation="0 0 0"
+          scale="3 3 3"
+          shadow="cast: true"
+          body="type:static;"
+          grabbable="physics:true;"
+></a-entity>
+
+
+
+</a-scene>
+  </body>
+</html>
