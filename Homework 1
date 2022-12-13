@@ -1,0 +1,136 @@
+<html>
+
+<head>
+ <script src = "https://mimicproject.com/libs/maximilian.js"></script>
+
+</head>
+
+<body>
+  <button id="startButton">Start</button>
+    <canvas></canvas>
+    
+
+    <!-- Our javascript code -->
+    <script type="text/javascript">
+
+       //let value = 0 //form of getting something to the console
+        var drawOutput = new Array(1024);
+        var counter = 0;
+        var playing = false
+		var maximJs = maximilian();
+        var audio = new maximJs.maxiAudio();  
+      var myOsc = new maximJs.maxiOsc();  //createOscillator 
+      var myOsc2 = new maximJs.maxiOsc();
+      var myOsc3 = new maximJs.maxiOsc();
+      var myOsc4 = new maximJs.maxiOsc();  
+      var volumeOsc = new maximJs.maxiOsc(); 
+      var highpitchOsc = new maximJs.maxiOsc();   
+      var highPitchFreq =  new maximJs.maxiOsc();  
+     //console.log('starting')
+    
+      var volume = 1.0;
+       	// var mySettings = new maximJs.maxiSettings();
+
+      let btn = document.getElementById("startButton")
+      btn.onclick=function(){
+
+        playing = !playing
+
+        if (playing){
+          audio.init();
+          btn.innerHTML = "stop"
+        }
+        else {
+          btn.innerHTML = "start"
+        }
+
+
+      }
+
+      // The below needs to be set to the samplerate of your audio card, default is 44100 !
+      	// mySettings.sampleRate=44100;
+ var averageOutput = 0;   
+ 
+        audio.play = function() {
+
+          if (!playing) return
+            counter++;
+// to perceptually freeze the signal we divide the sampling rate by the buffer size and 
+// use this as frequency
+            //var sum = myOsc.sinewave(43.06640625 * 1.0) + myOsc2.sinewave(43.06640625 * 10) * 0.15;
+// but this only works if the refresh rate is reliable
+// which depends on your browser
+      //notice that we feed in a value of 1. to create an envelope shape we can apply later.
+      
+  //var oscFreq = 
+// myOsc.sinewave(30);
+// myOsc2.sinewave(80);
+// myOsc3.coswave(70);
+// myOsc4.coswave(60);
+          
+           //var oscAmp = 
+          // myOsc.sinewave(0.8); 
+          // myOsc4.coswave(-0.4);
+         
+          //starting channel 1
+          var pitchFreq = highPitchFreq.sinewave(0.01)//producing the number
+          pitchFreq = (pitchFreq + 1) / 2 // range between zero and 1
+          pitchFreq = (pitchFreq * 800) + 100 //number always between 100 and 800
+          var high = highpitchOsc.sinewave(pitchFreq);//pitch changes every 10 seconds
+          volume = volumeOsc.saw(1);
+          volume = (volume + 1) / 2 // normalise it
+          var sum1 = high * volume 
+           
+          //starting channel 2
+          var sum2 
+
+          let squareFreqChanger = myOsc4.sinewave(0.01) + 1 // range 
+          value = myOsc3.square(squareFreqChanger)
+          if (value < 0) sum2 = myOsc.sinewave(50 + myOsc2.sinewave(0.1) * myOsc3.sinewave(30)) 
+          else sum2 = myOsc.sinewave(120 + myOsc2.sinewave(0.2)) * (myOsc3.sinewave(-0.01))
+
+          //value = volume;
+
+          // mixer section
+          var out = (sum1 + sum2) / 2 
+
+            drawOutput[counter % 1024] = out;
+              averageOutput+=out;
+            return out;
+        };
+
+        var canvas = document.querySelector("canvas");
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        var context = canvas.getContext("2d");
+
+        canvas.setAttribute("width", width);
+        canvas.setAttribute("height", height);
+
+        var spacing = (width / 1024);
+
+     
+        function draw() {
+        // let valueOutput = value.toFixed(2)
+         // console.log(valueOutput)
+
+            //This is basically the same as any other 2D processing draw routine.
+
+            //clear the screen
+            context.clearRect(0, 0, width, height);  
+            for (var i = 0; i < 1024; i++) {
+                context.beginPath();
+                context.moveTo(i * spacing, height / 2);
+                context.lineTo(i * spacing, height / 2 + (drawOutput[i] * height / 4));
+                context.stroke();
+                context.closePath();
+            }
+          requestAnimationFrame(draw);
+        }
+
+        requestAnimationFrame(draw);
+    </script>
+
+</body>
+
+</html>
