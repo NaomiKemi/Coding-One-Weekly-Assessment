@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <script src = "https://mimicproject.com/libs/maximilian.js"></script>
+ <link href="https://fonts.googleapis.com/css?family=Staatliches" rel="stylesheet">  
+ <script src = "https://rawgit.com/nexus-js/ui/master/dist/NexusUI.js"></script>
+  <link rel="stylesheet" href="styleCSS" />
+</head>
+<body>
+  <div>
+    <div id="title">Maximilian.js Sample Pitch Example</div>
+    <div id="subtitle">maxiSample.play</div>
+  <div><button id="playButton">Play</button></div>
+  <div><button id="stopButton" style="display:none">Stop</button></div>
+</div>
+<div id="oscilloscope"></div>
+<div id="spectrogram"></div>
+
+<script language="javascript" type="text/javascript">
+  
+  // We need to have a play button these days. Boring I know.
+	const playButton = document.getElementById('playButton');
+
+  //create a maximilian object
+  	var maxi = maximilian();
+
+  //create an audio engine
+	var maxiEngine = new maxi.maxiAudio();
+	
+  
+  var hatReady = false, kickReady = false, snareReady = false, triangleReady = false
+  
+	//create a bunch of stuff
+    var snare = new maxi.maxiSample();
+    var kick = new maxi.maxiSample();
+    var hat = new maxi.maxiSample();
+    var triangle = new maxi.maxiSample ();
+    var myOsc = new maxi.maxiOsc();
+    var myOsc2 = new maxi.maxiOsc();
+    var myClock = new maxi.maxiClock();
+    var p1Counter = 1;
+    var p2Counter = 1;
+    var OscCounter = 1;
+     
+    var env = new maxi.maxiEnv();
+    env.setAttack(100);
+    env.setDecay(100);
+    env.setSustain(0.5);
+    env.setRelease(1000);
+
+    var hatGain = 0.0
+  	var kickGain = 0.0
+    var triangleGain = 0.0
+  
+  	var scratch=0;
+    var counter = 0;
+    myClock.setTempo(110);
+    myClock.setTicksPerBeat(4);
+  	var oscilloscope,spectrogram;
+	
+	//when the play button is pressed...
+	let playAudio = () => {
+	  //arrange play button
+	  playButton.style.display="none";
+	  //start the audio engine
+	  maxiEngine.init();
+	  //the sample is from freesound https://freesound.org/people/schafferdavid/sounds/211471/
+  	//maxiEngine.loadSample("beat.wav", sample);
+    maxiEngine.loadSample("snare.wav", snare);
+  	maxiEngine.loadSample("kick.wav", kick);
+    maxiEngine.loadSample("hat.wav", hat);
+    maxiEngine.loadSample("triangle.wav",triangle);
+
+	  //show an oscilloscope and freqscope
+    Nexus.context = maxiEngine.context;
+	  oscilloscope = new Nexus.Oscilloscope('oscilloscope', {'size': [400,100]}).connect(maxiEngine.maxiAudioProcessor);
+    spectrogram = new Nexus.Spectrogram('spectrogram', {'size': [400,100]}).connect(maxiEngine.maxiAudioProcessor);
+
+		maxiEngine.play = function() {
+          
+      myClock.ticker();
+    
+
+    if (myClock.tick) {   
+      scratch=0;
+      counter++;
+      if (counter > 15) counter = 0
+      p1Counter++ 
+      p2Counter++
+      OscCounter++
+      if (p1Counter> 5) p1Counter = 1
+      if (p2Counter> 7) p2Counter = 1
+      if (OscCounter> 6) OscCounter= 1
+    }
+ 
+          if (counter == 8){
+            triangle.trigger();
+            triangleGain = 0.1
+            triangleReady = true;
+          }
+
+          if (counter == 0){
+            kick.trigger();
+            kickGain = 1.0
+            kickReady = true;
+          }
+          
+          if (counter == 4){
+            kick.trigger();
+            kickGain = 0.1
+            kickReady = true;
+          }
+          
+          if (counter == 8){
+            kick.trigger();
+            kickGain = 0.1
+            kickReady = true;
+          }
+          
+          if (counter == 12){
+            kick.trigger();
+            kickGain = 0.1
+            kickReady = true;
+          }         
+        
+          if (p1Counter == 1){
+            hat.trigger();
+            hatReady = true;
+          }
+
+
+        if (p2Counter == 1) {
+            snare.trigger(); 
+            snareReady = true;            
+        }
+
+//        // if (myClock.tick && counter%16==7) {
+//             snare.trigger();            
+//         }
+       var oscTrigger = 0.0
+       if (OscCounter == 1) oscTrigger = 1.0
+       var oscOut = myOsc.sinewave(100) * env.adsr(1, oscTrigger);
+
+       var out = 0;
+       if (snareReady) out += snare.playOnce(1) / 4 ;
+       if (kickReady) out += (kick.playOnce() * kickGain);
+       if (hatReady) out += hat.playOnce() / 4;
+       if (triangleReady) out += triangle.playOnce () / 4;
+       out += oscOut / 2;
+          
+       
+           
+           //kick.playOnce() + snare.playOnce() + bass.play(1 + myOsc.sinebuf(8));      	
+           
+        return out * 0.2;
+		
+        }
+	}
+
+    // This script listens to the play button
+	playButton.addEventListener("click", () => playAudio());
+
+
+	
+
+</script>
+</body>
+</html>
