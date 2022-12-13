@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <!-- The Canvas tag sets up a screen in the browser that we can draw to. -->
+    <canvas></canvas>
+
+    <script type="text/javascript">
+        // This is where we are going to store the mouse information
+        var mouseX =10;
+        var mouseY =30;
+      // We really need this
+        var TWO_PI = Math.PI * 2;
+        var K1 = 3/19;
+        //var K2 = 2/10;
+        var K3 = 1/6;
+
+        // This gets a reference to the canvas in the browser
+
+        var canvas = document.querySelector("canvas");
+
+        // This sets the width and height to the document window
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Be aware that when you resize the window, you will need to call (do) this again
+
+        // This creates a 2d drawing 'context' in your canvas
+        // All your drawing will be done in this canvas
+        var context = canvas.getContext("2d");
+       
+        //This tells the browser to get the mouse information from the function we've called getMouse
+        canvas.addEventListener('mousemove', getMouse, false);
+
+        //here's our function 'getMouse'.
+        function getMouse(mousePosition) {
+                mouseX = mousePosition.layerX;
+                mouseY = mousePosition.layerY;
+        }
+
+        // This function translates the canvas so that we're looking at it from a different position, meaning that 0,0 is somewhere else
+        
+        let seg = 1
+        let r = 1
+        var direction = 1 
+        var speed = 0.5
+        var k = 1
+        var kspeed = 0.0001
+        function draw() {
+         // context.clearRect(0,0, canvas.width, canvas.height);
+         context.fillStyle = "rgb(0, 0, 0)";
+         context.fillRect(0,0, canvas.width, canvas.height)
+        
+          drawFlower(K1, seg, 200, 400, 400, "#FF69B4")
+          seg++
+          drawFlower(k,1000, 200, 300, 200, "#FFFF00")
+          k += (kspeed * direction)
+          drawFlower(K3,500,r, 100, 100, "#FFB6C1")
+          r += (speed * direction)
+         //Console.log (direction)
+          if (direction == 1 && r > 200) direction = -1
+          if (direction == -1 && r < 10) direction = 1
+			    requestAnimationFrame(draw);
+        }
+
+
+        //request the first animation frame
+        requestAnimationFrame(draw);
+        //the end.
+
+        function drawFlower(K,segments, radius, offsetX, offsetY, color){
+		      //console.log (K)
+          var spacing = TWO_PI / segments;
+          context.beginPath();
+          for (var i = 0; i < segments; i++) {
+            context.strokeStyle = color; //set the line colour to black
+            var x = Math.sin(spacing * i * (mouseX/50)) * Math.cos(spacing * i  * (mouseY/50)) * Math.sin(K * i) * radius;
+            var y = Math.sin(spacing * i * (mouseX/50)) * Math.sin(spacing * i  * (mouseY/50)) * Math.sin(K * i) * radius;  
+            context.lineTo(x + offsetX,y + offsetY); 
+          }
+          context.stroke(); //draw the outline			
+          context.closePath();
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>
