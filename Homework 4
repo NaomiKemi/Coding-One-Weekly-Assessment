@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <canvas id="myCanvas2" width="400" height="400"></canvas>
+ 
+    
+    <script>
+        //console.log("starting")
+        const sharpenMatrix =  [ [ -1, -1, -1 ],
+                 [ -1,  9, -1 ],
+                 [ -1, -1, -1 ] ]; 
+
+        const blurMatrix = [ [ 0.0625, 0.125, 0.0625 ],
+        [ 0.125,  0.25, 0.125 ],
+        [ 0.0625, 0.125, 0.0625 ] ]; 
+
+        const matrix = blurMatrix
+
+        var imageWidth, imageHeight, data, outputImage, context
+        var mouseX = 1;
+        var mouseY = 1;
+        var imageObj = new Image();
+         imageObj.src = "pic.jpg";
+        imageObj.onload = function(){
+
+          var canvas = document.getElementById('myCanvas');
+          var canvas2 = document.getElementById('myCanvas2');
+          
+          context = canvas.getContext('2d');
+          var context2 = canvas2.getContext('2d');
+          imageWidth = imageObj.height;
+          imageHeight = imageObj.width;
+
+          context2.drawImage(imageObj, 0, 0);
+
+          var imageData = context2.getImageData(0, 0, imageWidth, imageHeight);
+          data = imageData.data;
+          outputImage = context.getImageData(0, 0, imageWidth, imageHeight);
+          requestAnimationFrame(draw);
+        }
+
+        function getArrayPos(i, j){
+          return ((imageWidth * i) + j) * 4
+        }
+        //creating function is a form of noting itself 
+        //we are using a packed array, filled with multiple data
+        //getting to the position of the array
+
+        function applyValue(arrayPos, r, g, b){
+          outputImage.data[arrayPos] = r
+          outputImage.data[arrayPos+1] = g
+          outputImage.data[arrayPos+2] = b
+          outputImage.data[arrayPos+3] = 255
+        }
+        //fills the data into the new data 
+        //preparing our image
+
+        //var outputImage = imageData;
+      
+      var draw = function() {
+        //console.log("displaying array")
+        //console.log(outputImage)
+    
+            // iterate over all pixels
+        for(var i = 0; i < imageHeight; i++) {
+          // loop through each row
+          for(var j = 0; j < imageWidth; j++) {
+
+            //console.log("j:" + j + " i:" + i)
+            
+          
+            //console.log(`r:${r} g:${g} b:${b}`)
+            let c = getConvolution(i ,j)
+            //console.log(c)
+            let arrayPos = getArrayPos(i, j)
+            applyValue(arrayPos, c.r, c.g, c.b)
+            
+          }
+        }
+    
+        context.putImageData(outputImage,0,0);
+
+		    requestAnimationFrame(draw);
+      };
+ 
+      function getConvolution(imageX, imageY){
+        let r = 0.0
+        let g = 0.0
+        let b = 0.0
+        var matrixSize = matrix.length
+        const offset = Math.floor(matrixSize/2)
+        for (let matrixX = 0; matrixX < matrixSize; matrixX++){
+          for (let matrixY = 0; matrixY < matrixSize; matrixY++){
+         
+            //matrix(X,Y) = each item in the matrix holds the multipiler 
+            //image(X,Y) = current pixel that we are getting the convolution data for 
+
+            const xloc = (imageX + matrixX - offset)
+            const yloc = (imageY + matrixY - offset)
+
+            let loc = getArrayPos(xloc, yloc)
+            
+            if (loc < 0) continue
+            if (loc >= data.length) continue
+
+            r += (data[loc]) * matrix[matrixX][matrixY];
+            g += (data[loc+1]) * matrix[matrixX][matrixY];
+            b += (data[loc+2]) * matrix[matrixX][matrixY];
+          }
+        }
+        r = clampByte(r)
+        g = clampByte(g)
+        b = clampByte(b)
+        let o = {r:r, g:g, b:b}
+        return o
+
+
+      } // end of convolution function
+      
+      function clampByte(value){
+      if (value > 255 ) return 255
+      if (value < 0 ) return 0 
+      return value
+      }
+   
+</script>
+  </body>
+</html>     
