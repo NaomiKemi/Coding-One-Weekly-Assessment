@@ -47,18 +47,23 @@
         
         void main(){
             
-        	vec2 pos = gl_FragCoord.xy/resolution;
-            float y = 0.5 + (cos(pos.x * time) * 0.1);           
-            vec3 color = vec3(y)*0.5;
+        vec2 pos = gl_FragCoord.xy/resolution;
+        float y = 0.5 + (cos(pos.x * time) * 0.1); 
+        vec3 color = vec3(y)*0.5;          
             
-            // Plot a line
-            float lines = line(pos,y);
-            color = vec3(lines,0.,0.);
         
             
-            
-            gl_FragColor = vec4(color,1.0);
-            
+        float angle = atan(-pos.y + 0.50, pos.x - 0.5) * 0.3 * mouse.x;
+        float len = length(pos - vec2(0.5, 0.25));
+ 
+
+        color.r += sin(angle * 40.0 + angle * 40.0 + time);
+        color.g += tan(angle * 30.0 + angle * 60.0 - time);
+        color.b += sin(angle * 50.0 + angle * 50.0 * 1.0); 
+
+
+
+        gl_FragColor = vec4(color.r,color.g,color.b,2.0);
             
            
         }
